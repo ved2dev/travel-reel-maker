@@ -15,7 +15,7 @@ export default function Home() {
     <main className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-          Travel Reel Maker
+          Travel Reel Maker v2.0
         </h1>
         <p className="text-center text-gray-600 mb-12">
           Upload your travel photos and videos to create an amazing 30-60 second reel
