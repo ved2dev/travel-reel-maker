@@ -45,12 +45,14 @@ export default function FileUpload({
     if (uploadedFiles.length === 0) return
 
     onStartProcessing()
-    
+
     try {
       // Step 1: Get signed upload URLs from backend
+      console.log('=== STARTING REEL CREATION ===')
+      console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)
       console.log('Getting upload URLs for', uploadedFiles.length, 'files')
       onProgressUpdate(10)
-      
+
       const urlResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/get-upload-urls`,
         {
@@ -65,14 +67,14 @@ export default function FileUpload({
 
       // Step 2: Upload files directly to Firebase Storage
       const uploadedFileNames: string[] = []
-      
+
       for (let i = 0; i < uploadedFiles.length; i++) {
         const file = uploadedFiles[i]
         const uploadUrl = uploadUrls[i].uploadUrl
         const fileName = uploadUrls[i].fileName
-        
+
         console.log(`Uploading file ${i + 1}/${uploadedFiles.length}: ${file.name}`)
-        
+
         await axios.put(uploadUrl, file, {
           headers: {
             'Content-Type': file.type,
@@ -85,7 +87,7 @@ export default function FileUpload({
             onProgressUpdate(Math.round(totalProgress))
           }
         })
-        
+
         uploadedFileNames.push(fileName)
         console.log(`Successfully uploaded: ${file.name}`)
       }
@@ -105,12 +107,15 @@ export default function FileUpload({
 
       onProgressUpdate(100)
       console.log('Reel created successfully:', reelResponse.data)
-      
+
       onProcessingComplete(reelResponse.data.downloadUrl)
-      
+
     } catch (error) {
-      console.error('Error creating reel:', error)
-      alert('Failed to create reel. Please try again.')
+      console.error('=== ERROR CREATING REEL ===')
+      console.error('Error details:', error)
+      console.error('Error response:', error.response?.data)
+      console.error('Error status:', error.response?.status)
+      alert(`Failed to create reel: ${error.response?.data?.message || error.message}. Please try again.`)
       onProgressUpdate(0)
     }
   }
@@ -119,11 +124,10 @@ export default function FileUpload({
     <div className="space-y-6">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-          isDragActive
-            ? 'border-blue-400 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
-        }`}
+        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
+          ? 'border-blue-400 bg-blue-50'
+          : 'border-gray-300 hover:border-gray-400'
+          }`}
       >
         <input {...getInputProps()} />
         <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
