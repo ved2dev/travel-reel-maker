@@ -42,3 +42,7 @@ travel-reel-maker/
 ## Getting Started
 
 See individual README files in frontend/ and backend/ directories for setup instructions.
+
+## Deployment Status
+- ✅ Frontend: Deployed on Vercel
+- ✅ Backend: Deployed on Google Cloud Functions
