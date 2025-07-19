@@ -47,68 +47,29 @@ export default function FileUpload({
     onStartProcessing()
 
     try {
-      // Step 1: Get signed upload URLs from backend
-      console.log('=== STARTING REEL CREATION ===')
+      // Temporary simplified approach for testing
+      console.log('=== STARTING REEL CREATION v2.0 ===')
       console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)
-      console.log('Getting upload URLs for', uploadedFiles.length, 'files')
-      onProgressUpdate(10)
-
-      const urlResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/get-upload-urls`,
+      console.log('Files to process:', uploadedFiles.length)
+      
+      onProgressUpdate(50)
+      
+      // Test the backend connection
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/test-create-reel`,
         {
           fileCount: uploadedFiles.length,
-          location: location || 'Travel'
-        }
-      )
-
-      const { reelId, uploadUrls } = urlResponse.data
-      console.log('Got upload URLs for reel:', reelId)
-      onProgressUpdate(20)
-
-      // Step 2: Upload files directly to Firebase Storage
-      const uploadedFileNames: string[] = []
-
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        const file = uploadedFiles[i]
-        const uploadUrl = uploadUrls[i].uploadUrl
-        const fileName = uploadUrls[i].fileName
-
-        console.log(`Uploading file ${i + 1}/${uploadedFiles.length}: ${file.name}`)
-
-        await axios.put(uploadUrl, file, {
-          headers: {
-            'Content-Type': file.type,
-          },
-          onUploadProgress: (progressEvent) => {
-            const fileProgress = Math.round(
-              (progressEvent.loaded * 100) / (progressEvent.total || 1)
-            )
-            const totalProgress = 20 + ((i * 60) / uploadedFiles.length) + ((fileProgress * 60) / (uploadedFiles.length * 100))
-            onProgressUpdate(Math.round(totalProgress))
-          }
-        })
-
-        uploadedFileNames.push(fileName)
-        console.log(`Successfully uploaded: ${file.name}`)
-      }
-
-      onProgressUpdate(80)
-      console.log('All files uploaded, creating reel...')
-
-      // Step 3: Tell backend to process the uploaded files
-      const reelResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/create-reel`,
-        {
-          reelId: reelId,
           location: location || 'Travel',
-          fileNames: uploadedFileNames
+          fileNames: uploadedFiles.map(f => f.name)
         }
       )
 
       onProgressUpdate(100)
-      console.log('Reel created successfully:', reelResponse.data)
-
-      onProcessingComplete(reelResponse.data.downloadUrl)
+      console.log('Backend test successful:', response.data)
+      
+      // Return demo video for now
+      const demoVideoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      onProcessingComplete(demoVideoUrl)
 
     } catch (error) {
       console.error('=== ERROR CREATING REEL ===')
