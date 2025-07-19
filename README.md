@@ -44,5 +44,10 @@ travel-reel-maker/
 See individual README files in frontend/ and backend/ directories for setup instructions.
 
 ## Deployment Status
-- ✅ Frontend: Deployed on Vercel
-- ✅ Backend: Deployed on Google Cloud Functions
+- ✅ Frontend: Deployed on Vercel - https://travel-reel-maker-hectyt1g2-veds-projects-2952b1ed.vercel.app/
+- ✅ Backend: Deployed on Google Cloud Functions - https://us-central1-travel-reel-maker.cloudfunctions.net/travel-reel-api
+
+## Live URLs
+- **Frontend**: https://travel-reel-maker-hectyt1g2-veds-projects-2952b1ed.vercel.app/
+- **Backend API**: https://us-central1-travel-reel-maker.cloudfunctions.net/travel-reel-api
+- **Health Check**: https://us-central1-travel-reel-maker.cloudfunctions.net/travel-reel-api/health
